@@ -47,7 +47,7 @@ const gallery = [
     caption: "Isla Mujeres catamaran",
   },
 ];
-const payBadges = ["VISA", "Mastercard", "AMEX", "Interac"];
+const payBadges = ["VISA", "Mastercard", "AMEX", "BTC", "ETH", "USDT"];
 import {
   classes,
   codeError,
@@ -62,17 +62,17 @@ import {
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Skyline Passage | Cancun Vacation Packages for Canadians" },
+      { title: "Cancun Vacation Packages for Canadians from $249 | Sol Escapes" },
       {
         name: "description",
         content:
-          "All-inclusive Cancun vacation packages tailored for Canadian travelers by Skyline Passage (skylinepassage.com). Economy, Premium Economy or Business Class flights from 50+ airports, 100% CAD pricing.",
+          "Entry-level Cancun escapes from $249 CAD plus Basic, Standard and Premium packages. Save 10% paying in crypto or by card, plus exclusive codes and limited-time perks.",
       },
-      { property: "og:title", content: "Skyline Passage | Cancun Vacation Packages for Canadians" },
+      { property: "og:title", content: "Cancun Vacation Packages for Canadians" },
       {
         property: "og:description",
         content:
-          "All-inclusive Cancun vacation packages tailored for Canadian travelers by Skyline Passage (skylinepassage.com). Flights from 50+ Canadian & international airports with 24/7 dedicated travel support.",
+          "Entry escapes from $249 CAD. 10% off with crypto or card at checkout, plus exclusive discount codes and perks. Economy, Premium Economy or Business Class flights from 50+ airports.",
       },
     ],
   }),
@@ -212,7 +212,7 @@ function Index() {
   const [codeInput, setCodeInput] = useState("");
   const [applied, setApplied] = useState(null);
   const [codeHint, setCodeHint] = useState(null);
-  const [payment, setPayment] = useState("Card");
+  const [payment, setPayment] = useState("Cryptocurrency");
   const clock = useCountdown();
   const allTiers = [...entryTiers, ...tiers];
   const t = allTiers.find((x) => x.name === tier);
@@ -220,10 +220,10 @@ function Index() {
   const subtotal = (t.price + c.add) * travellers;
   const appliedError = applied ? codeError(applied, subtotal, travellers, date) : null;
   const activeCode = applied && !appliedError ? applied : null;
-  const payMethod = paymentMethods.find((m) => m.name === payment) ?? paymentMethods[0];
-  const q = quote(subtotal, activeCode, payMethod.name);
+  const payMethod = paymentMethods.find((m) => m.name === payment);
+  const q = quote(subtotal, activeCode, payment);
   const total = q.total;
-  const msg = `Hi! I'd like to inquire about a Cancun vacation package with Skyline Passage (skylinepassage.com).\n• Package: ${tier}\n• Flight class: ${cls}\n• Departing from: ${airport}\n• Travellers: ${travellers}${date ? `\n• Travel date: ${date}` : ""}\n• Paying with: ${payMethod.name}${q.payment ? ` (special offer: ${fmt(q.payment)} CAD off)` : ""}${activeCode ? `\n• Discount code: ${activeCode} (saving ${fmt(q.code)} CAD)` : ""}\n• Estimated total: ${fmt(total)} CAD`;
+  const msg = `Hi! I'd like to inquire about a Cancun vacation package.\n• Package: ${tier}\n• Flight class: ${cls}\n• Departing from: ${airport}\n• Travellers: ${travellers}${date ? `\n• Travel date: ${date}` : ""}\n• Paying with: ${payment}${q.payment ? ` (special offer: ${fmt(q.payment)} CAD off)` : ""}${activeCode ? `\n• Discount code: ${activeCode} (saving ${fmt(q.code)} CAD)` : ""}\n• Estimated total: ${fmt(total)} CAD`;
   const waLink = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`;
   const applyCode = (key) => {
     const clean = key.trim().toUpperCase();
@@ -242,12 +242,14 @@ function Index() {
   return (
     <main className="min-h-screen bg-background">
       <div className="sticky top-0 z-50 bg-foreground text-background">
-        <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-center gap-x-4 gap-y-1 px-5 py-2 text-center text-xs font-semibold sm:text-sm">
-          <span>⚡ All-Inclusive Cancun Packages for Canadian Travellers</span>
+        <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-center gap-x-4 gap-y-1 px-5 py-2.5 text-center text-xs font-semibold sm:text-sm">
+          <span>⚡ Entry escapes from {fmt(249)} CAD</span>
           <span className="opacity-40">|</span>
-          <span>Flights from 50+ Airports</span>
+          <span>
+            Flash pricing ends in <span className="tabular-nums text-accent">{clock}</span>
+          </span>
           <span className="opacity-40">|</span>
-          <span>10% off with Card or Interac</span>
+          <span>10% off with crypto or card</span>
           <span className="opacity-40">|</span>
           <span>
             Code <span className="rounded bg-background/15 px-1.5 py-0.5 font-mono">CANCUN200</span>{" "}
@@ -255,53 +257,6 @@ function Index() {
           </span>
         </div>
       </div>
-
-      <header className="sticky top-[36px] z-40 border-b border-border/30 bg-background/95 backdrop-blur-md">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-3">
-          <a
-            href="#"
-            className="flex items-center gap-2 text-xl font-bold tracking-tight text-foreground transition hover:opacity-90"
-          >
-            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-sm font-bold text-primary-foreground shadow-sm">
-              ✈
-            </span>
-            <span className="font-serif text-xl font-bold tracking-tight md:text-2xl">
-              Skyline Passage
-            </span>
-          </a>
-          <nav className="hidden items-center gap-6 text-sm font-semibold text-muted-foreground md:flex">
-            <a href="#packages" className="transition hover:text-primary">
-              Packages
-            </a>
-            <a href="#flights" className="transition hover:text-primary">
-              Flights
-            </a>
-            <a href="#special-offers" className="transition hover:text-primary">
-              Offers
-            </a>
-            <a href="#gallery" className="transition hover:text-primary">
-              Moments
-            </a>
-            <a href="#reviews" className="transition hover:text-primary">
-              Reviews
-            </a>
-            <a href="#plan" className="transition hover:text-primary">
-              Plan Trip
-            </a>
-          </nav>
-          <a
-            href={waLink}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 rounded-full bg-whatsapp px-4 py-2 text-xs font-bold text-primary-foreground shadow-sm transition hover:scale-105"
-          >
-            <svg viewBox="0 0 24 24" className="h-3.5 w-3.5 fill-current" aria-hidden>
-              <path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm5.3 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7-2.8-1.1-4.5-4-4.7-4.2-.1-.2-1.1-1.5-1.1-2.9s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.4 0 .5l-.4.6-.3.4c-.1.1-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.3 2.4 1.5.3.1.5.1.6-.1l.9-1c.2-.3.4-.2.6-.1l1.9.9c.3.1.5.2.5.3.1.2.1.7-.1 1.3Z" />
-            </svg>
-            Inquire Now
-          </a>
-        </div>
-      </header>
 
       <section className="relative flex min-h-[85vh] items-end overflow-hidden">
         <img
@@ -320,8 +275,8 @@ function Index() {
             Trade the snow for Cancun sand.
           </h1>
           <p className="mt-5 max-w-xl text-lg opacity-90">
-            Entry escapes from {fmt(249)} CAD, all-inclusive up to luxury suites with Skyline
-            Passage. Flights from 50+ airports, prices in Canadian dollars, no surprises.
+            Entry escapes from {fmt(249)} CAD, all-inclusive up to luxury suites. Flights from 50+
+            airports, prices in Canadian dollars, no surprises.
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
             <a
@@ -428,14 +383,14 @@ function Index() {
             })}
           </div>
           <p className="mt-6 text-xs text-muted-foreground">
-            Payment offers apply to every package and stack with your discount code. All
-            transactions are securely processed in Canadian Dollars (CAD) with confirmed airline and
-            resort itineraries.
+            Payment offers apply to every package, including entry escapes, and stack with your
+            discount code. Crypto balances are confirmed on-chain before tickets are issued; card
+            offers are applied to the final charged amount.
           </p>
         </div>
       </section>
 
-      <section id="flights" className="scroll-mt-24 bg-sand/60 py-20">
+      <section className="bg-sand/60 py-20">
         <div className="mx-auto max-w-6xl px-5">
           <h2 className="text-4xl font-bold md:text-5xl">Fly your way</h2>
           <div className="mt-10 grid gap-4 md:grid-cols-3">
@@ -569,7 +524,7 @@ function Index() {
         </div>
       </section>
 
-      <section id="plan" className="mx-auto max-w-3xl scroll-mt-24 px-5 pb-20">
+      <section className="mx-auto max-w-3xl px-5 pb-20">
         <h2 className="text-4xl font-bold md:text-5xl">Plan your trip</h2>
         <div className="mt-8 grid gap-5 rounded-2xl border border-border bg-card p-6 md:grid-cols-2 md:p-8">
           <label className="md:col-span-2 text-sm font-semibold">
@@ -743,59 +698,8 @@ function Index() {
           </svg>
           Inquire on WhatsApp
         </a>
-        <p className="mt-5 text-xs opacity-60">
-          Fast response via WhatsApp · Dedicated Canadian travel specialists · 100% CAD pricing.
-        </p>
+        <p className="mt-5 text-xs opacity-60">Flash pricing and perks end tonight at midnight.</p>
       </section>
-
-      <footer className="border-t border-border/20 bg-foreground py-12 text-background/80">
-        <div className="mx-auto max-w-6xl px-5">
-          <div className="flex flex-col items-center justify-between gap-6 md:flex-row">
-            <div className="text-center md:text-left">
-              <div className="flex items-center justify-center gap-2 text-xl font-bold text-background md:justify-start">
-                <span className="flex h-7 w-7 items-center justify-center rounded-md bg-accent text-xs font-bold text-accent-foreground">
-                  ✈
-                </span>
-                <span className="font-serif text-2xl font-bold">Skyline Passage</span>
-              </div>
-              <p className="mt-1.5 text-xs text-background/60">
-                skylinepassage.com · Curated Cancun vacation packages for Canadian travellers.
-              </p>
-            </div>
-            <div className="flex flex-wrap justify-center gap-6 text-xs font-medium text-background/70">
-              <a href="#packages" className="transition hover:text-background">
-                Packages
-              </a>
-              <a href="#flights" className="transition hover:text-background">
-                Flight Classes
-              </a>
-              <a href="#special-offers" className="transition hover:text-background">
-                Special Offers
-              </a>
-              <a href="#gallery" className="transition hover:text-background">
-                Trip Gallery
-              </a>
-              <a href="#reviews" className="transition hover:text-background">
-                Reviews
-              </a>
-              <a
-                href={waLink}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="transition hover:text-background"
-              >
-                WhatsApp Us
-              </a>
-            </div>
-          </div>
-          <div className="mt-8 border-t border-background/10 pt-6 text-center text-xs text-background/50">
-            <p>
-              © {new Date().getFullYear()} Skyline Passage (skylinepassage.com). All rights
-              reserved. Prices quoted in Canadian Dollars (CAD).
-            </p>
-          </div>
-        </div>
-      </footer>
     </main>
   );
 }

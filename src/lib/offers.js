@@ -148,11 +148,11 @@ export function discountFor(key, subtotal) {
 }
 export const paymentMethods = [
   {
-    name: "Interac e-Transfer",
+    name: "Cryptocurrency",
     pct: 0.1,
     tagline: "10% off every package",
-    detail: "Pay via Canadian Interac e-Transfer and 10% comes off the package total at checkout.",
-    methods: "All Canadian Banks · Fast & Direct",
+    detail: "Settle your balance in crypto and 10% comes off the package total at checkout.",
+    methods: "BTC · ETH · USDT · USDC",
   },
   {
     name: "Card",

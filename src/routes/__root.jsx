@@ -74,7 +74,7 @@ export const Route = createRootRouteWithContext()({
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:site", content: "@skylinepassage" },
+      { name: "twitter:site", content: "@Lovable" },
     ],
     links: [
       {
