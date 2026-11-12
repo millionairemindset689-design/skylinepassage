@@ -78,8 +78,10 @@ export const Route = createFileRoute("/")({
   }),
   component: Index,
 });
-// Placeholder number — replace with the real business WhatsApp number (digits only, with country code)
-const WHATSAPP_NUMBER = "15555555555";
+// Business WhatsApp & contact number (digits only with country code for wa.me / tel links)
+const WHATSAPP_NUMBER = "13676758297";
+const CONTACT_PHONE_DISPLAY = "+1 (367) 675-8297";
+const CONTACT_PHONE_HREF = `tel:+${WHATSAPP_NUMBER}`;
 const airports = {
   Canada: [
     "Toronto Pearson (YYZ)",
@@ -255,6 +257,13 @@ function Index() {
             Code <span className="rounded bg-background/15 px-1.5 py-0.5 font-mono">CANCUN200</span>{" "}
             = $200 off
           </span>
+          <span className="opacity-40">|</span>
+          <a
+            href={CONTACT_PHONE_HREF}
+            className="underline decoration-background/40 underline-offset-4 transition hover:text-accent hover:decoration-accent"
+          >
+            WhatsApp &amp; Call: {CONTACT_PHONE_DISPLAY}
+          </a>
         </div>
       </div>
 
@@ -687,17 +696,37 @@ function Index() {
           {payMethod.name.toLowerCase()} payment offer ({fmt(q.payment)} CAD off) is already built
           into the estimate above.
         </p>
-        <a
-          href={waLink}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="mt-8 inline-flex items-center gap-3 rounded-full bg-whatsapp px-8 py-4 text-lg font-bold text-primary-foreground transition hover:scale-105"
-        >
-          <svg viewBox="0 0 24 24" className="h-6 w-6 fill-current" aria-hidden>
-            <path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm5.3 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7-2.8-1.1-4.5-4-4.7-4.2-.1-.2-1.1-1.5-1.1-2.9s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.4 0 .5l-.4.6-.3.4c-.1.1-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.3 2.4 1.5.3.1.5.1.6-.1l.9-1c.2-.3.4-.2.6-.1l1.9.9c.3.1.5.2.5.3.1.2.1.7-.1 1.3Z" />
-          </svg>
-          Inquire on WhatsApp
-        </a>
+        <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
+          <a
+            href={waLink}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-3 rounded-full bg-whatsapp px-8 py-4 text-lg font-bold text-primary-foreground transition hover:scale-105"
+          >
+            <svg viewBox="0 0 24 24" className="h-6 w-6 fill-current" aria-hidden>
+              <path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm5.3 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7-2.8-1.1-4.5-4-4.7-4.2-.1-.2-1.1-1.5-1.1-2.9s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.4 0 .5l-.4.6-.3.4c-.1.1-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.3 2.4 1.5.3.1.5.1.6-.1l.9-1c.2-.3.4-.2.6-.1l1.9.9c.3.1.5.2.5.3.1.2.1.7-.1 1.3Z" />
+            </svg>
+            Inquire on WhatsApp
+          </a>
+          <a
+            href={CONTACT_PHONE_HREF}
+            className="inline-flex items-center gap-3 rounded-full border border-background/30 px-8 py-4 text-lg font-bold text-background transition hover:bg-background/10"
+          >
+            <svg viewBox="0 0 24 24" className="h-5 w-5 fill-current" aria-hidden>
+              <path d="M6.62 10.79a15.05 15.05 0 0 0 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2Z" />
+            </svg>
+            Call {CONTACT_PHONE_DISPLAY}
+          </a>
+        </div>
+        <p className="mt-4 text-sm opacity-80">
+          WhatsApp &amp; Contact:{" "}
+          <a
+            href={CONTACT_PHONE_HREF}
+            className="font-semibold underline underline-offset-4 hover:opacity-100"
+          >
+            {CONTACT_PHONE_DISPLAY}
+          </a>
+        </p>
         <p className="mt-5 text-xs opacity-60">Flash pricing and perks end tonight at midnight.</p>
       </section>
     </main>

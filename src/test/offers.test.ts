@@ -76,6 +76,7 @@ describe("Special offers — payment-method discounts", () => {
     expect(paymentMethods.map((m) => [m.name, m.pct])).toEqual([
       ["Cryptocurrency", 0.1],
       ["Card", 0.1],
+      ["Interac e-Transfer", 0],
     ]);
   });
 
@@ -85,6 +86,11 @@ describe("Special offers — payment-method discounts", () => {
 
   it("takes 10% off the package total for card", () => {
     expect(paymentDiscount("Card", 3798)).toBe(380);
+  });
+
+  it("charges the standard price for Interac e-Transfer", () => {
+    expect(paymentDiscount("Interac e-Transfer", 3798)).toBe(0);
+    expect(quote(3798, null, "Interac e-Transfer").total).toBe(3798);
   });
 
   it("gives nothing for an unlisted payment method", () => {
@@ -110,5 +116,16 @@ describe("Special offers — payment-method discounts", () => {
     const q = quote(150, "CANCUN200", "Cryptocurrency");
     expect(q.discount).toBe(150);
     expect(q.total).toBe(0);
+  });
+});
+
+describe("Entry-level packages and promo codes", () => {
+  it("rejects every discount code on Saver and Escape", () => {
+    for (const tier of ["Saver", "Escape"])
+      for (const k of Object.keys(codes))
+        expect(codeError(k, 3798, 6, "2027-01-01", TODAY, tier)).toBe("Discount codes don't apply to entry-level packages.");
+  });
+  it("still allows codes on Basic", () => {
+    expect(codeError("CANCUN200", 3798, 2, "", TODAY, "Basic")).toBeNull();
   });
 });

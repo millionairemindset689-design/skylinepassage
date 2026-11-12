@@ -88,7 +88,7 @@ export const codes: Record<string, Code> = {
     label: "$200 off any package",
     kind: "flat",
     value: 200,
-    note: "Stacks with entry-level flash pricing. One use per booking.",
+    note: "Not valid on entry-level Saver & Escape packages. One use per booking.",
   },
   EARLYBIRD: {
     label: "10% off when you book 45+ days ahead",
@@ -132,9 +132,11 @@ export function codeError(
   travellers: number,
   date: string,
   today = new Date(),
+  tier?: string,
 ) {
   const c = codes[key];
   if (!c) return "That code isn't valid.";
+  if (tier && isEntryTier(tier)) return "Discount codes don't apply to entry-level packages.";
   if (c.minTravellers && travellers < c.minTravellers) return `${key} needs ${c.minTravellers}+ travellers.`;
   if (c.minLeadDays) {
     const days = leadDays(date, today);
@@ -144,6 +146,9 @@ export function codeError(
   if (subtotal <= 0) return "Pick a package first.";
   return null;
 }
+
+// Entry-level packages are already flash-priced, so promo codes are blocked on them.
+export const isEntryTier = (name: string) => entryTiers.some((t) => t.name === name);
 
 export function discountFor(key: string, subtotal: number) {
   const c = codes[key];
@@ -174,6 +179,13 @@ export const paymentMethods: PaymentMethod[] = [
     tagline: "10% off every package",
     detail: "Pay by card at checkout and 10% comes off the package total.",
     methods: "Visa · Mastercard · American Express",
+  },
+  {
+    name: "Interac e-Transfer",
+    pct: 0,
+    tagline: "Standard price",
+    detail: "Pay by Interac e-Transfer at the standard package price — no payment discount applies.",
+    methods: "Interac e-Transfer from any Canadian bank",
   },
 ];
 
