@@ -150,3 +150,25 @@
 }
 
 @layer base { body { font-family: var(--font-sans); } h1,h2,h3 { font-family: var(--font-display); } }
+
+@keyframes whatsapp-slow-blink {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.45);
+  }
+  50% {
+    opacity: 0.85;
+    transform: scale(1.02);
+    box-shadow: 0 0 16px 4px rgba(37, 211, 102, 0.35);
+  }
+}
+
+.animate-whatsapp-blink {
+  animation: whatsapp-slow-blink 2.4s ease-in-out infinite;
+}
+
+.animate-whatsapp-blink:hover {
+  animation-play-state: paused;
+}
+

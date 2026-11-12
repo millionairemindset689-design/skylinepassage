@@ -1,5 +1,6 @@
 // Offer + pricing data for the Cancun landing page.
 // Prices are placeholders until the business confirms real rates.
+
 // Entry-level packages: promotional fares that must sit in the $200–$400 CAD band.
 export const entryTiers = [
   {
@@ -31,6 +32,7 @@ export const entryTiers = [
     ],
   },
 ];
+
 export const tiers = [
   {
     name: "Basic",
@@ -72,17 +74,19 @@ export const tiers = [
     ],
   },
 ];
+
 export const classes = [
   { name: "Economy", add: 0, note: "Standard seat, carry-on included" },
   { name: "Premium Economy", add: 450, note: "Extra legroom, priority boarding" },
   { name: "Business Class", add: 1400, note: "Lie-flat comfort, lounge, 2 bags" },
 ];
+
 export const codes = {
   CANCUN200: {
     label: "$200 off any package",
     kind: "flat",
     value: 200,
-    note: "Stacks with entry-level flash pricing. One use per booking.",
+    note: "Not valid on entry-level Saver & Escape packages. One use per booking.",
   },
   EARLYBIRD: {
     label: "10% off when you book 45+ days ahead",
@@ -99,6 +103,7 @@ export const codes = {
     note: "For families, friend groups and condo crews.",
   },
 };
+
 export const perks = [
   {
     title: "Free Premium Economy upgrade",
@@ -117,8 +122,10 @@ export const perks = [
     expiry: "First 20 trips",
   },
 ];
+
 export const fmt = (n) =>
   n.toLocaleString("en-CA", { style: "currency", currency: "CAD", maximumFractionDigits: 0 });
+
 // Days between today and the travel date; null when the date is missing or unreadable.
 export function leadDays(date, today = new Date()) {
   if (!date) return null;
@@ -128,9 +135,18 @@ export function leadDays(date, today = new Date()) {
   start.setHours(0, 0, 0, 0);
   return Math.round((d.getTime() - start.getTime()) / 86400000);
 }
-export function codeError(key, subtotal, travellers, date, today = new Date()) {
+
+export function codeError(
+  key,
+  subtotal,
+  travellers,
+  date,
+  today = new Date(),
+  tier,
+) {
   const c = codes[key];
   if (!c) return "That code isn't valid.";
+  if (tier && isEntryTier(tier)) return "Discount codes don't apply to entry-level packages.";
   if (c.minTravellers && travellers < c.minTravellers)
     return `${key} needs ${c.minTravellers}+ travellers.`;
   if (c.minLeadDays) {
@@ -141,11 +157,17 @@ export function codeError(key, subtotal, travellers, date, today = new Date()) {
   if (subtotal <= 0) return "Pick a package first.";
   return null;
 }
+
+// Entry-level packages are already flash-priced, so promo codes are blocked on them.
+export const isEntryTier = (name) => entryTiers.some((t) => t.name === name);
+
 export function discountFor(key, subtotal) {
   const c = codes[key];
   if (!c) return 0;
   return c.kind === "flat" ? Math.min(c.value, subtotal) : Math.round(subtotal * c.value);
 }
+
+// Special offers: the payment method chosen at checkout discounts the package total.
 export const paymentMethods = [
   {
     name: "Cryptocurrency",
@@ -161,12 +183,22 @@ export const paymentMethods = [
     detail: "Pay by card at checkout and 10% comes off the package total.",
     methods: "Visa · Mastercard · American Express",
   },
+  {
+    name: "Interac e-Transfer",
+    pct: 0,
+    tagline: "Standard price",
+    detail: "Pay by Interac e-Transfer at the standard package price — no payment discount applies.",
+    methods: "Interac e-Transfer from any Canadian bank",
+  },
 ];
+
 export function paymentDiscount(method, subtotal) {
   const m = paymentMethods.find((x) => x.name === method);
   if (!m || subtotal <= 0) return 0;
   return Math.min(subtotal, Math.round(subtotal * m.pct));
 }
+
+// Checkout quote: the payment-method discount lands first, then any promo code on what's left.
 export function quote(subtotal, code, payment) {
   const paymentCut = paymentDiscount(payment, subtotal);
   const afterPayment = Math.max(0, subtotal - paymentCut);

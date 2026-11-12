@@ -47,7 +47,7 @@ const gallery = [
     caption: "Isla Mujeres catamaran",
   },
 ];
-const payBadges = ["VISA", "Mastercard", "AMEX", "BTC", "ETH", "USDT"];
+import { PayLogos } from "@/components/PayLogos";
 import {
   classes,
   codeError,
@@ -164,45 +164,76 @@ function useCountdown() {
 }
 function TierCard({ t, active, onSelect }) {
   const save = t.was ? t.was - t.price : 0;
+  const tierWaLink = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
+    `Hi! I'd like to inquire about availability for the Cancun ${t.name} package (${t.nights} nights, from ${fmt(t.price)} CAD).`,
+  )}`;
+
   return (
-    <button
-      key={t.name}
-      onClick={onSelect}
-      className={`relative rounded-2xl border-2 bg-card p-7 text-left text-card-foreground transition ${active ? "border-primary shadow-xl" : "border-border hover:border-primary/40"}`}
-    >
-      {(t.badge || t.popular) && (
-        <span className="absolute -top-3 left-7 rounded-full bg-accent px-3 py-1 text-xs font-bold text-accent-foreground">
-          {t.popular ? "Most popular" : t.badge}
-        </span>
-      )}
-      <h3 className="text-2xl font-bold">{t.name}</h3>
-      <p className="text-sm text-muted-foreground">{t.nights} nights</p>
-      <p className="mt-5 text-4xl font-bold text-primary">
-        {fmt(t.price)}
-        <span className="text-base font-normal text-muted-foreground"> CAD</span>
-      </p>
-      {t.was && (
-        <p className="mt-1 flex items-center gap-2 text-sm">
-          <span className="text-muted-foreground line-through">{fmt(t.was)}</span>
-          <span className="rounded-full border border-primary/30 bg-primary/10 px-2.5 py-0.5 text-xs font-bold text-primary">
-            Save {fmt(save)}
-          </span>
-        </p>
-      )}
-      <ul className="mt-6 space-y-2.5 text-sm">
-        {t.features.map((f) => (
-          <li key={f} className="flex gap-2">
-            <span className="text-primary">✓</span>
-            {f}
-          </li>
-        ))}
-      </ul>
-      <span
-        className={`mt-7 block rounded-full py-2.5 text-center text-sm font-semibold ${active ? "bg-primary text-primary-foreground" : "bg-secondary text-secondary-foreground"}`}
+    <div className="flex flex-col">
+      <div
+        className={`relative flex flex-1 flex-col justify-between rounded-2xl border-2 bg-card p-7 text-left text-card-foreground transition ${
+          active ? "border-primary shadow-xl" : "border-border hover:border-primary/40"
+        }`}
       >
-        {active ? "Selected" : "Select"}
-      </span>
-    </button>
+        <div>
+          {(t.badge || t.popular) && (
+            <span className="absolute -top-3 left-7 rounded-full bg-accent px-3 py-1 text-xs font-bold text-accent-foreground">
+              {t.popular ? "Most popular" : t.badge}
+            </span>
+          )}
+          <h3 className="text-2xl font-bold">{t.name}</h3>
+          <p className="text-sm text-muted-foreground">{t.nights} nights</p>
+          <p className="mt-5 text-4xl font-bold text-primary">
+            {fmt(t.price)}
+            <span className="text-base font-normal text-muted-foreground"> CAD</span>
+          </p>
+          {t.was && (
+            <p className="mt-1 flex items-center gap-2 text-sm">
+              <span className="text-muted-foreground line-through">{fmt(t.was)}</span>
+              <span className="rounded-full border border-primary/30 bg-primary/10 px-2.5 py-0.5 text-xs font-bold text-primary">
+                Save {fmt(save)}
+              </span>
+            </p>
+          )}
+          <ul className="mt-6 space-y-2.5 text-sm">
+            {t.features.map((f) => (
+              <li key={f} className="flex gap-2">
+                <span className="font-bold text-primary">✓</span>
+                <span>{f}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <button
+          type="button"
+          onClick={onSelect}
+          className={`mt-7 block w-full rounded-full py-2.5 text-center text-sm font-semibold transition ${
+            active
+              ? "bg-primary text-primary-foreground"
+              : "bg-secondary text-secondary-foreground hover:bg-primary/10"
+          }`}
+        >
+          {active ? "Selected" : "Select"}
+        </button>
+      </div>
+
+      <a
+        href={tierWaLink}
+        target="_blank"
+        rel="noopener noreferrer"
+        onClick={onSelect}
+        className="animate-whatsapp-blink mt-3.5 inline-flex w-full items-center justify-center gap-2 rounded-full bg-[#25D366] px-4 py-3 text-sm font-bold text-white shadow-md transition hover:bg-[#20ba5a] hover:scale-[1.01]"
+      >
+        <span className="relative flex h-2 w-2 shrink-0">
+          <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-white opacity-75"></span>
+          <span className="relative inline-flex h-2 w-2 rounded-full bg-white"></span>
+        </span>
+        <svg viewBox="0 0 24 24" className="h-4 w-4 shrink-0 fill-current" aria-hidden>
+          <path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm5.3 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7-2.8-1.1-4.5-4-4.7-4.2-.1-.2-1.1-1.5-1.1-2.9s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.4 0 .5l-.4.6-.3.4c-.1.1-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.3 2.4 1.5.3.1.5.1.6-.1l.9-1c.2-.3.4-.2.6-.1l1.9.9c.3.1.5.2.5.3.1.2.1.7-.1 1.3Z" />
+        </svg>
+        <span>Inquire on WhatsApp for availability</span>
+      </a>
+    </div>
   );
 }
 function Index() {
@@ -220,9 +251,9 @@ function Index() {
   const t = allTiers.find((x) => x.name === tier);
   const c = classes.find((x) => x.name === cls);
   const subtotal = (t.price + c.add) * travellers;
-  const appliedError = applied ? codeError(applied, subtotal, travellers, date) : null;
+  const appliedError = applied ? codeError(applied, subtotal, travellers, date, new Date(), tier) : null;
   const activeCode = applied && !appliedError ? applied : null;
-  const payMethod = paymentMethods.find((m) => m.name === payment);
+  const payMethod = paymentMethods.find((m) => m.name === payment) || paymentMethods[0];
   const q = quote(subtotal, activeCode, payment);
   const total = q.total;
   const msg = `Hi! I'd like to inquire about a Cancun vacation package.\n• Package: ${tier}\n• Flight class: ${cls}\n• Departing from: ${airport}\n• Travellers: ${travellers}${date ? `\n• Travel date: ${date}` : ""}\n• Paying with: ${payment}${q.payment ? ` (special offer: ${fmt(q.payment)} CAD off)` : ""}${activeCode ? `\n• Discount code: ${activeCode} (saving ${fmt(q.code)} CAD)` : ""}\n• Estimated total: ${fmt(total)} CAD`;
@@ -230,7 +261,7 @@ function Index() {
   const applyCode = (key) => {
     const clean = key.trim().toUpperCase();
     setCodeInput(clean);
-    const err = codeError(clean, subtotal, travellers, date);
+    const err = codeError(clean, subtotal, travellers, date, new Date(), tier);
     if (err) {
       setApplied(null);
       setCodeHint(err);
@@ -257,13 +288,6 @@ function Index() {
             Code <span className="rounded bg-background/15 px-1.5 py-0.5 font-mono">CANCUN200</span>{" "}
             = $200 off
           </span>
-          <span className="opacity-40">|</span>
-          <a
-            href={CONTACT_PHONE_HREF}
-            className="underline decoration-background/40 underline-offset-4 transition hover:text-accent hover:decoration-accent"
-          >
-            WhatsApp &amp; Call: {CONTACT_PHONE_DISPLAY}
-          </a>
         </div>
       </div>
 
@@ -362,39 +386,106 @@ function Index() {
             before you pay — entry escapes included.
           </p>
           <div className="mt-10 grid gap-6 md:grid-cols-2">
-            {paymentMethods.map((m) => {
-              const active = payment === m.name;
-              const cut = quote(subtotal, null, m.name).payment;
+            {/* Card 1: Card or crypto */}
+            {(() => {
+              const isCardOrCrypto = payment === "Card" || payment === "Cryptocurrency";
+              const cut10 = quote(subtotal, null, "Card").payment;
               return (
-                <button
-                  key={m.name}
-                  type="button"
-                  onClick={() => setPayment(m.name)}
-                  className={`relative rounded-2xl border-2 bg-card p-7 text-left text-card-foreground transition ${active ? "border-primary shadow-xl" : "border-border hover:border-primary/40"}`}
+                <div
+                  className={`relative flex flex-col justify-between rounded-2xl border-2 bg-card p-7 text-left text-card-foreground transition ${
+                    isCardOrCrypto ? "border-primary shadow-xl" : "border-border hover:border-primary/40"
+                  }`}
                 >
-                  <span className="absolute -top-3 left-7 rounded-full bg-accent px-3 py-1 text-xs font-bold text-accent-foreground">
-                    {Math.round(m.pct * 100)}% off
-                  </span>
-                  <h3 className="text-2xl font-bold">{m.name}</h3>
-                  <p className="mt-1 text-sm text-muted-foreground">{m.methods}</p>
-                  <p className="mt-5 text-3xl font-bold text-primary">{m.tagline}</p>
-                  <p className="mt-3 text-sm text-muted-foreground">{m.detail}</p>
-                  <p className="mt-5 text-sm font-semibold">
-                    On your {tier} trip: save {fmt(cut)} CAD
-                  </p>
-                  <span
-                    className={`mt-5 block rounded-full py-2.5 text-center text-sm font-semibold ${active ? "bg-primary text-primary-foreground" : "bg-secondary text-secondary-foreground"}`}
-                  >
-                    {active ? "Selected" : "Choose this"}
-                  </span>
-                </button>
+                  <div>
+                    <span className="absolute -top-3 left-7 rounded-full bg-accent px-3 py-1 text-xs font-bold text-accent-foreground">
+                      10% off
+                    </span>
+                    <h3 className="text-2xl font-bold">Card or crypto</h3>
+                    <p className="mt-4 text-3xl font-bold text-primary">10% off every package</p>
+                    <p className="mt-2 text-sm text-muted-foreground">
+                      Pay by card or cryptocurrency and 10% comes off your package total at
+                      checkout.
+                    </p>
+                    <div className="mt-4">
+                      <PayLogos only={["visa", "mastercard", "amex", "crypto"]} />
+                    </div>
+                    <p className="mt-5 text-sm font-semibold">
+                      On your {tier} trip: save {fmt(cut10)} CAD
+                    </p>
+                  </div>
+                  <div className="mt-6 grid grid-cols-2 gap-3">
+                    <button
+                      type="button"
+                      onClick={() => setPayment("Card")}
+                      className={`rounded-full py-2.5 px-4 text-center text-sm font-semibold transition ${
+                        payment === "Card"
+                          ? "bg-primary text-primary-foreground shadow-sm"
+                          : "bg-secondary text-secondary-foreground hover:bg-primary/10"
+                      }`}
+                    >
+                      {payment === "Card" ? "Pay by card ✓" : "Pay by card"}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setPayment("Cryptocurrency")}
+                      className={`rounded-full py-2.5 px-4 text-center text-sm font-semibold transition ${
+                        payment === "Cryptocurrency"
+                          ? "bg-primary text-primary-foreground shadow-sm"
+                          : "bg-secondary text-secondary-foreground hover:bg-primary/10"
+                      }`}
+                    >
+                      {payment === "Cryptocurrency" ? "Cryptocurrency ✓" : "Cryptocurrency"}
+                    </button>
+                  </div>
+                </div>
               );
-            })}
+            })()}
+
+            {/* Card 2: Interac e-Transfer */}
+            {(() => {
+              const isInterac = payment === "Interac e-Transfer";
+              return (
+                <div
+                  className={`relative flex flex-col justify-between rounded-2xl border-2 bg-card p-7 text-left text-card-foreground transition ${
+                    isInterac ? "border-primary shadow-xl" : "border-border hover:border-primary/40"
+                  }`}
+                >
+                  <div>
+                    <span className="absolute -top-3 left-7 rounded-full border border-border bg-secondary px-3 py-1 text-xs font-bold text-secondary-foreground">
+                      Standard price
+                    </span>
+                    <h3 className="text-2xl font-bold">Interac e-Transfer</h3>
+                    <p className="mt-4 text-3xl font-bold text-foreground">Standard price</p>
+                    <p className="mt-2 text-sm text-muted-foreground">
+                      If you pay by Interac e-Transfer, you pay the standard package price. The 10%
+                      payment discount does not apply.
+                    </p>
+                    <div className="mt-4">
+                      <PayLogos only={["interac"]} />
+                    </div>
+                    <div className="mt-5 hidden sm:block h-5" aria-hidden />
+                  </div>
+                  <div className="mt-6">
+                    <button
+                      type="button"
+                      onClick={() => setPayment("Interac e-Transfer")}
+                      className={`w-full rounded-full py-2.5 px-5 text-center text-sm font-semibold transition ${
+                        isInterac
+                          ? "bg-primary text-primary-foreground shadow-sm"
+                          : "bg-secondary text-secondary-foreground hover:bg-primary/10"
+                      }`}
+                    >
+                      {isInterac ? "Pay by e-Transfer ✓" : "Pay by e-Transfer"}
+                    </button>
+                  </div>
+                </div>
+              );
+            })()}
           </div>
           <p className="mt-6 text-xs text-muted-foreground">
-            Payment offers apply to every package, including entry escapes, and stack with your
-            discount code. Crypto balances are confirmed on-chain before tickets are issued; card
-            offers are applied to the final charged amount.
+            The card and crypto offer applies to every package, including entry escapes, and stacks with
+            discount codes (codes aren't valid on entry escapes). Crypto balances are confirmed on-chain
+            before tickets are issued; card offers are applied to the final charged amount.
           </p>
         </div>
       </section>
@@ -598,7 +689,7 @@ function Index() {
           </label>
           <label className="md:col-span-2 text-sm font-semibold">
             Pay with
-            <div className="mt-2 grid gap-3 sm:grid-cols-2">
+            <div className="mt-2 grid gap-3 sm:grid-cols-3">
               {paymentMethods.map((m) => (
                 <button
                   key={m.name}
@@ -675,15 +766,8 @@ function Index() {
               </svg>
               Secure payments accepted
             </p>
-            <div className="mt-3 flex flex-wrap gap-2">
-              {payBadges.map((b) => (
-                <span
-                  key={b}
-                  className="rounded-md border border-border bg-card px-3 py-1.5 text-xs font-bold tracking-wide text-card-foreground"
-                >
-                  {b}
-                </span>
-              ))}
+            <div className="mt-3">
+              <PayLogos />
             </div>
           </div>
         </div>
@@ -693,40 +777,21 @@ function Index() {
         <h2 className="text-4xl font-bold md:text-5xl">Ready for Cancun?</h2>
         <p className="mx-auto mt-4 max-w-md opacity-80">
           Send us your trip details and a travel advisor will reply within minutes — your{" "}
-          {payMethod.name.toLowerCase()} payment offer ({fmt(q.payment)} CAD off) is already built
-          into the estimate above.
+          {q.payment > 0
+            ? `${payMethod.name.toLowerCase()} payment offer (${fmt(q.payment)} CAD off) is already built into the estimate above.`
+            : `estimate is already built into the calculator above.`}
         </p>
-        <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
-          <a
-            href={waLink}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-3 rounded-full bg-whatsapp px-8 py-4 text-lg font-bold text-primary-foreground transition hover:scale-105"
-          >
-            <svg viewBox="0 0 24 24" className="h-6 w-6 fill-current" aria-hidden>
-              <path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm5.3 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7-2.8-1.1-4.5-4-4.7-4.2-.1-.2-1.1-1.5-1.1-2.9s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.4 0 .5l-.4.6-.3.4c-.1.1-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.3 2.4 1.5.3.1.5.1.6-.1l.9-1c.2-.3.4-.2.6-.1l1.9.9c.3.1.5.2.5.3.1.2.1.7-.1 1.3Z" />
-            </svg>
-            Inquire on WhatsApp
-          </a>
-          <a
-            href={CONTACT_PHONE_HREF}
-            className="inline-flex items-center gap-3 rounded-full border border-background/30 px-8 py-4 text-lg font-bold text-background transition hover:bg-background/10"
-          >
-            <svg viewBox="0 0 24 24" className="h-5 w-5 fill-current" aria-hidden>
-              <path d="M6.62 10.79a15.05 15.05 0 0 0 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2Z" />
-            </svg>
-            Call {CONTACT_PHONE_DISPLAY}
-          </a>
-        </div>
-        <p className="mt-4 text-sm opacity-80">
-          WhatsApp &amp; Contact:{" "}
-          <a
-            href={CONTACT_PHONE_HREF}
-            className="font-semibold underline underline-offset-4 hover:opacity-100"
-          >
-            {CONTACT_PHONE_DISPLAY}
-          </a>
-        </p>
+        <a
+          href={waLink}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="animate-whatsapp-blink mt-8 inline-flex items-center gap-3 rounded-full bg-[#25D366] px-8 py-4 text-lg font-bold text-white shadow-lg transition hover:bg-[#20ba5a] hover:scale-105"
+        >
+          <svg viewBox="0 0 24 24" className="h-6 w-6 fill-current" aria-hidden>
+            <path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm5.3 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7-2.8-1.1-4.5-4-4.7-4.2-.1-.2-1.1-1.5-1.1-2.9s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.4 0 .5l-.4.6-.3.4c-.1.1-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.3 2.4 1.5.3.1.5.1.6-.1l.9-1c.2-.3.4-.2.6-.1l1.9.9c.3.1.5.2.5.3.1.2.1.7-.1 1.3Z" />
+          </svg>
+          Inquire on WhatsApp
+        </a>
         <p className="mt-5 text-xs opacity-60">Flash pricing and perks end tonight at midnight.</p>
       </section>
     </main>

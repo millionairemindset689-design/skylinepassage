@@ -1,9 +1,12 @@
+import type { ReactNode } from "react";
+
 // Payment brand marks drawn inline. Brand colours are fixed by each brand's guidelines, so they are not theme tokens.
 type Brand = "visa" | "mastercard" | "amex" | "interac" | "crypto";
 
-const box = "flex h-9 w-14 items-center justify-center rounded-md border border-border bg-card shadow-sm";
+const box =
+  "flex h-9 w-14 items-center justify-center rounded-md border border-border bg-card shadow-sm";
 
-const logos: Record<Brand, { label: string; el: React.ReactNode }> = {
+const logos: Record<Brand, { label: string; el: ReactNode }> = {
   visa: {
     label: "Visa",
     el: <span className="text-base font-black italic tracking-tight" style={{ color: "#1A1F71" }}>VISA</span>,
